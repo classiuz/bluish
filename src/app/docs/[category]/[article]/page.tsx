@@ -1,4 +1,5 @@
-import { allData } from 'contentlayer/generated'
+import Link from 'next/link'
+// import { allData } from 'contentlayer/generated'
 import { getOneArticle, getPrevNextArticle } from '@/data/getData'
 import { useMDXComponent } from 'next-contentlayer/hooks'
 import PageNavigation from '@/components/PageNavigation'
@@ -49,15 +50,15 @@ export default function Article({ params }: Props) {
 
       <div className="mt-4 flex w-full items-center justify-between text-light-on_sur_var/70 dark:text-dark-on_sur_var/70">
         {prev.available ? (
-          <a
-            href={prev?.url}
+          <Link
+            href={prev?.url!}
             className="inline-flex w-1/3 items-center justify-start gap-2 text-2xl hover:text-light-pri dark:hover:text-dark-pri"
           >
             <span>
               <MdArrowBack />
             </span>
             <p className="text-base">{prev?.title}</p>
-          </a>
+          </Link>
         ) : (
           <span className="w-1/3" />
         )}
@@ -71,15 +72,15 @@ export default function Article({ params }: Props) {
           </span>
         </a>
         {next.available ? (
-          <a
-            href={next?.url}
+          <Link
+            href={next?.url!}
             className="inline-flex w-1/3 items-center justify-end gap-2 text-2xl hover:text-light-pri dark:hover:text-dark-pri"
           >
             <p className="text-base">{next?.title}</p>
             <span>
               <MdArrowForward />
             </span>
-          </a>
+          </Link>
         ) : (
           <span className="w-1/3" />
         )}
