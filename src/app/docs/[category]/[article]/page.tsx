@@ -6,16 +6,17 @@ import PageNavigation from '@/components/PageNavigation'
 import { VscGithubInverted } from 'react-icons/vsc'
 import { MdArrowBack, MdArrowForward } from 'react-icons/md'
 
-export async function getStaticPaths() {
-  const paths = allData.map((post) => ({
-    params: {
-      category: post._raw.flattenedPath.split('/')[0],
-      article: post._raw.flattenedPath.split('/')[1],
-    },
-  }))
+// DEPLOY ERROR - FIX IN THE FUTURE
+// export async function getStaticPaths() {
+//   const paths = allData.map((post) => ({
+//     params: {
+//       category: post._raw.flattenedPath.split('/')[0],
+//       article: post._raw.flattenedPath.split('/')[1],
+//     },
+//   }))
 
-  return { paths, fallback: false }
-}
+//   return { paths, fallback: false }
+// }
 
 interface Props {
   params: {
