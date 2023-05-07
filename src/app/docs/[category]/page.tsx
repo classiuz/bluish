@@ -1,7 +1,14 @@
 import Link from 'next/link'
-import { getAllArticles } from '@/data/getData'
+import getData, { getAllArticles } from '@/data/getData'
+import regExp from '@/utils/regExp'
 import PageNavigation from '@/components/PageNavigation'
 import { MdArrowForwardIos } from 'react-icons/md'
+
+export async function generateStaticParams() {
+  return getData().map(({ category }) => ({
+    category: regExp(category),
+  }))
+}
 
 interface Props {
   params: {
