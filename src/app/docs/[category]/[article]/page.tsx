@@ -1,5 +1,5 @@
 import Link from 'next/link'
-// import { allData } from 'contentlayer/generated'
+import { allData } from 'contentlayer/generated'
 import { getOneArticle, getPrevNextArticle } from '@/data/getData'
 import { useMDXComponent } from 'next-contentlayer/hooks'
 import PageNavigation from '@/components/PageNavigation'
@@ -7,17 +7,12 @@ import PageNavigation from '@/components/PageNavigation'
 import { VscGithubInverted } from 'react-icons/vsc'
 import { MdArrowBack, MdArrowForward } from 'react-icons/md'
 
-// DEPLOY ERROR - FIX IN THE FUTURE
-// export async function getStaticPaths() {
-//   const paths = allData.map((post) => ({
-//     params: {
-//       category: post._raw.flattenedPath.split('/')[0],
-//       article: post._raw.flattenedPath.split('/')[1],
-//     },
-//   }))
-
-//   return { paths, fallback: false }
-// }
+export async function generateStaticParams() {
+  return allData.map((post) => ({
+    category: post._raw.flattenedPath.split('/')[0],
+    article: post._raw.flattenedPath.split('/')[1],
+  }))
+}
 
 interface Props {
   params: {
