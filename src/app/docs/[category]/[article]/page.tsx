@@ -1,6 +1,5 @@
 import Link from 'next/link'
-import { allData } from 'contentlayer/generated'
-import { getOneArticle, getPrevNextArticle } from '@/data/getData'
+import getAllData, { getOneArticle, getPrevNextArticle } from '@/data/getData'
 import { useMDXComponent } from 'next-contentlayer/hooks'
 import PageNavigation from '@/components/PageNavigation'
 
@@ -8,9 +7,10 @@ import { VscGithubInverted } from 'react-icons/vsc'
 import { MdArrowBack, MdArrowForward } from 'react-icons/md'
 
 export async function generateStaticParams() {
-  return allData.map((post) => ({
-    category: post._raw.flattenedPath.split('/')[0],
-    article: post._raw.flattenedPath.split('/')[1],
+  const allData = getAllData()
+  return allData.map(({ path: { category, article } }) => ({
+    category,
+    article,
   }))
 }
 
@@ -22,16 +22,16 @@ interface Props {
 }
 
 export async function generateMetadata({ params }: Props) {
-  const { article } = getOneArticle(params.category, params.article)
+  const { title, description } = getOneArticle(`${params.category}/${params.article}`)
   return {
-    title: `${article.title} - Bluish`,
-    description: article.description,
+    title: `${title} - Bluish`,
+    description: description,
   }
 }
 
 export default function Article({ params }: Props) {
-  const { category, article } = getOneArticle(params.category, params.article)
-  const { prev, next } = getPrevNextArticle(category, article)
+  const article = getOneArticle(`${params.category}/${params.article}`)
+  const { prev, next } = getPrevNextArticle(`${params.category}/${params.article}`)
   const MDXContent = useMDXComponent(article.body)
 
   return (
@@ -44,15 +44,17 @@ export default function Article({ params }: Props) {
       <MDXContent />
 
       <div className="mt-4 flex w-full items-center justify-between text-light-on_sur_var/70 dark:text-dark-on_sur_var/70">
-        {prev.available ? (
+        {prev ? (
           <Link
-            href={prev?.url!}
-            className="inline-flex w-1/3 items-center justify-start gap-2 text-2xl hover:text-light-pri dark:hover:text-dark-pri"
+            href={prev.url}
+            className={`inline-flex w-1/3 items-center justify-start gap-2 text-2xl hover:text-light-pri dark:hover:text-dark-pri ${
+              prev.status && 'pointer-events-none text-light-on_sur_var/40 dark:text-dark-on_sur_var/20'
+            }`}
           >
             <span>
               <MdArrowBack />
             </span>
-            <p className="text-base">{prev?.title}</p>
+            <p className="text-base">{prev.title}</p>
           </Link>
         ) : (
           <span className="w-1/3" />
@@ -66,12 +68,14 @@ export default function Article({ params }: Props) {
             <VscGithubInverted />
           </span>
         </a>
-        {next.available ? (
+        {next ? (
           <Link
-            href={next?.url!}
-            className="inline-flex w-1/3 items-center justify-end gap-2 text-2xl hover:text-light-pri dark:hover:text-dark-pri"
+            href={next.url}
+            className={`inline-flex w-1/3 items-center justify-end gap-2 text-2xl hover:text-light-pri dark:hover:text-dark-pri ${
+              next.status && 'pointer-events-none text-light-on_sur_var/60 dark:text-dark-on_sur_var/20'
+            }`}
           >
-            <p className="text-base">{next?.title}</p>
+            <p className="text-base">{next.title}</p>
             <span>
               <MdArrowForward />
             </span>

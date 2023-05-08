@@ -1,4 +1,4 @@
-import { getAllArticles } from '@/data/getData'
+import { getOneCategory } from '@/data/getData'
 
 interface Props {
   params: {
@@ -7,6 +7,6 @@ interface Props {
 }
 
 export async function GET(request: Request, { params }: Props) {
-  const response = getAllArticles(params.category)
+  const response = getOneCategory(params.category)
   return new Response(JSON.stringify(response))
 }

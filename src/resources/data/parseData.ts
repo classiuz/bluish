@@ -1,14 +1,19 @@
 import { type Data } from 'contentlayer/generated'
-import { type Article } from './types'
 
-const parseData = (data: Data[]): Article[] => {
-  const parsedData = data.map(({ title, description, status, body, url }) => {
+const parseData = (data: Data[]) => {
+  const parsedData = data.map(({ category, title, description, status, body, url, _raw: { flattenedPath } }) => {
     return {
+      category,
       title,
       description,
       status,
       body: body.code,
       url,
+      path: {
+        complet: flattenedPath,
+        category: flattenedPath.split('/')[0],
+        article: flattenedPath.split('/')[1],
+      },
     }
   })
 

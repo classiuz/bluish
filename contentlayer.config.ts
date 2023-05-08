@@ -1,3 +1,4 @@
+import normalizeName from './src/resources/utils/normalizeName'
 import { defineDocumentType, makeSource } from 'contentlayer/source-files'
 
 export const Data = defineDocumentType(() => ({
@@ -22,6 +23,10 @@ export const Data = defineDocumentType(() => ({
     },
   },
   computedFields: {
+    category: {
+      type: 'string',
+      resolve: (article) => normalizeName(article._raw.sourceFileDir),
+    },
     url: {
       type: 'string',
       resolve: (article) => `/docs/${article._raw.flattenedPath}`,

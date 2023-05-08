@@ -1,14 +1,14 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import getData from '@/data/getData'
+import { getAllCategories } from '@/data/getData'
 import regExp from '@/utils/regExp'
 
 import { MdLibraryBooks, MdSearch } from 'react-icons/md'
 
 export default function Navbar() {
   const pathname = usePathname()
-  const data = getData()
+  const data = getAllCategories()
 
   return (
     <nav className="sticky top-[calc(64px+2rem)] flex h-[calc(100vh-64px-2rem)] w-[20%] flex-col gap-4">

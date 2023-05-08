@@ -1,6 +1,6 @@
-import getData from '@/data/getData'
+import getAllData from '@/data/getData'
 
 export async function GET(request: Request) {
-  const response = getData()
+  const response = getAllData()
   return new Response(JSON.stringify(response))
 }

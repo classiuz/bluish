@@ -8,6 +8,6 @@ interface Props {
 }
 
 export async function GET(request: Request, { params }: Props) {
-  const response = getOneArticle(params.category, params.article)
+  const response = getOneArticle(`${params.category}/${params.article}`)
   return new Response(JSON.stringify(response))
 }

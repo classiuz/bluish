@@ -1,53 +1,69 @@
 import { notFound } from 'next/navigation'
 import { allData } from 'contentlayer/generated'
+import parseData from './parseData'
 import normalizeName from '../utils/normalizeName'
-import sortData from './sortData'
-import { type Article } from './types'
 
-const getData = () => {
-  return sortData(allData)
+const categoriesOrder = ['Getting Started', 'Components', 'Systems']
+
+const getAllData = () => {
+  const sortedData = allData.sort((a, b) => categoriesOrder.indexOf(a.category) - categoriesOrder.indexOf(b.category))
+
+  return parseData(sortedData)
 }
 
-export default getData
+export const getAllCategories = () => {
+  const allData = getAllData()
+  const allCategories = categoriesOrder.map((category) => {
+    const articles = allData.filter(({ category: currentCategory }) => currentCategory === category)
 
-export const getAllArticles = (category: string) => {
-  const allData = getData()
-  const currentCategory = allData.find((element) => element.category === normalizeName(category))
-  if (!currentCategory) notFound()
+    return {
+      category,
+      articles,
+    }
+  })
 
-  return currentCategory
+  return allCategories
 }
 
-export const getOneArticle = (category: string, article: string) => {
-  const { category: currentCategory, articles: allArticles } = getAllArticles(category)
-  const currentArticle = allArticles.find(({ url }) => url === `/docs/${category}/${article}`)
-  if (!currentArticle) notFound()
+export const getAllArticles = (categoryPath: string) => {
+  const allData = getAllData()
+  const category = normalizeName(categoryPath)
+  const articles = allData.filter(({ path }) => path.category === categoryPath)
+  if (!articles) notFound()
 
   return {
-    category: currentCategory,
-    article: currentArticle,
+    category,
+    articles,
   }
 }
 
-export const getPrevNextArticle = (category: string, article: Article) => {
-  const { articles: allArticles } = getAllArticles(category)
-  const index = allArticles.findIndex(({ title }) => title === article.title)
+export const getOneCategory = (categoryPath: string) => {
+  const allData = getAllData()
+  const finedCategory = allData.find(({ path }) => path.category === categoryPath)
+  if (!finedCategory) notFound()
 
-  const prev = allArticles.find((article, currentIndex) => index - 1 === currentIndex)
-  const next = allArticles.find((article, currentIndex) => index + 1 === currentIndex)
+  return finedCategory
+}
+
+export const getOneArticle = (articlePath: string) => {
+  const allData = getAllData()
+  const finedArticle = allData.find(({ path }) => path.complet === articlePath)
+  if (!finedArticle) notFound()
+
+  return finedArticle
+}
+
+export default getAllData
+
+export const getPrevNextArticle = (currentArticle: string) => {
+  const allData = getAllData()
+  const index = allData.findIndex(({ path }) => path.complet === currentArticle)
+
+  const prev = index !== 0
+  const next = index + 1 !== allData.length
 
   return {
-    prev: {
-      available: prev ? true : false,
-      title: prev?.title,
-      status: prev?.status,
-      url: prev?.url,
-    },
-    next: {
-      available: next ? true : false,
-      title: next?.title,
-      status: next?.status,
-      url: next?.url,
-    },
+    prev: prev ? allData[index - 1] : undefined,
+    next: next ? allData[index + 1] : undefined,
   }
 }
