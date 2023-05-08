@@ -6,7 +6,7 @@ import { MdArrowForwardIos } from 'react-icons/md'
 export async function generateStaticParams() {
   const allData = getAllData()
   return allData.map(({ path: { category } }) => ({
-    category: category,
+    category,
   }))
 }
 
